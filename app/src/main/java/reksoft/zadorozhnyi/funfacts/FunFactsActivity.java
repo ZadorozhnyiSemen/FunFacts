@@ -11,12 +11,33 @@ import android.widget.TextView;
 import java.util.Random;
 
 public class FunFactsActivity extends AppCompatActivity {
+    private static final String KEY_FACT = "KEY_FACT";
+    private static final String KEY_COLOR = "KEY_COLOR";
     private FactBook mFactBook = new FactBook();
     private ColorWheel mColorWheel = new ColorWheel();
 
     private TextView mFactTextView;
     private Button mShowFactButton;
     private RelativeLayout mRelativeLayout;
+    private String mFact = mFactBook.mFacts[0];
+    private int mColor = Color.parseColor(mColorWheel.mColors[8]);
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(KEY_FACT, mFact);
+        outState.putInt(KEY_COLOR, mColor);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        mFact = savedInstanceState.getString(KEY_FACT);
+        mFactTextView.setText(mFact);
+        mColor = savedInstanceState.getInt(KEY_COLOR);
+        mRelativeLayout.setBackgroundColor(mColor);
+        mShowFactButton.setTextColor(mColor);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,11 +51,11 @@ public class FunFactsActivity extends AppCompatActivity {
         mShowFactButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String fact = mFactBook.getFact();
-                int color = mColorWheel.getColor();
-                mFactTextView.setText(fact);
-                mRelativeLayout.setBackgroundColor(color);
-                mShowFactButton.setTextColor(color);
+                mFact = mFactBook.getFact();
+                mColor = mColorWheel.getColor();
+                mFactTextView.setText(mFact);
+                mRelativeLayout.setBackgroundColor(mColor);
+                mShowFactButton.setTextColor(mColor);
             }
         });
     }
